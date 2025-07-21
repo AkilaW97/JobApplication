@@ -1,5 +1,8 @@
 package com.ewis.jobapplication.job;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -15,19 +18,22 @@ public class JobController {
     }
 
     @GetMapping("/jobs")
-    public List<Job> findAll () {
-        return jobservice.findAll();
+    public ResponseEntity<List<Job>> findAll () {
+        return new ResponseEntity<>(jobservice.findAll(), HttpStatus.OK);
     }
 
     @PostMapping("/jobs")
-    public String createJob(@RequestBody Job job){
+    public ResponseEntity<String> createJob(@RequestBody Job job){
         jobservice.createJob(job);
-        return "Job added successfully";
+        return new ResponseEntity<>("Job added successfully", HttpStatus.OK);
     }
 
     @GetMapping("jobs/{id}")
-    public Job getJobById(@PathVariable Long id){
+    public ResponseEntity<Job> getJobById(@PathVariable Long id){
         Job job = jobservice.getJobById(id);
-        return job;
+        if(job != null) {
+            return new ResponseEntity<>(job, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
