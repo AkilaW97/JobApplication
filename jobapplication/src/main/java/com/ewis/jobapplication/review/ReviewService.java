@@ -1,4 +1,4 @@
 package com.ewis.jobapplication.review;
 
-public class ReviewService {
+public interface ReviewService {
 }
