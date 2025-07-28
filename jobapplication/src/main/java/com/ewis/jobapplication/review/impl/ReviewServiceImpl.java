@@ -38,4 +38,12 @@ public class ReviewServiceImpl implements ReviewService {
             return false;
         }
     }
+
+    @Override
+    public Review getReview(Long companyId, Long reviewId) {
+        List <Review> reviews = reviewRepository.findByCompanyId(companyId);
+        return reviews.stream().filter(review -> review.getId() == reviewId)
+                .findFirst()
+                .orElse(null);
+    }
 }
