@@ -1,5 +1,7 @@
 package com.ewis.jobapplication.review.impl;
 
+import com.ewis.jobapplication.company.Company;
+import com.ewis.jobapplication.company.CompanyService;
 import com.ewis.jobapplication.review.Review;
 import com.ewis.jobapplication.review.ReviewRepository;
 import com.ewis.jobapplication.review.ReviewService;
@@ -11,14 +13,29 @@ import java.util.List;
 public class ReviewServiceImpl implements ReviewService {
 
     private ReviewRepository reviewRepository;
+    private CompanyService companyService;
 
-    public ReviewServiceImpl(ReviewRepository reviewRepository) {
+
+    public ReviewServiceImpl(ReviewRepository reviewRepository, CompanyService companyService) {
         this.reviewRepository = reviewRepository;
+        this.companyService = companyService;
     }
 
     @Override
     public List<Review> getAllReviews(Long companyId) {
         List<Review> reviews = reviewRepository.findByCompanyId(companyId);
         return reviews;
+    }
+
+    @Override
+    public boolean addReview(Long companyId, Review review) {
+        Company company = companyService.getCompanyById(companyId);
+        if(company != null){
+            review.setCompany(company);
+            reviewRepository.save(review);
+            return true;
+        }else{
+            return false;
+        }
     }
 }
